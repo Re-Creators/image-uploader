@@ -3,23 +3,20 @@
         <Upload v-if="status == 0"/>
         <Loading v-if="status == 1"/>
         <Result v-if="status == 2"/>
-        <Footer/>
     </div>
 </template>
 
 <script>
-import Loading from './components/Loading.vue'
-import Result from './components/Result.vue'
-import Upload from './components/Upload.vue'
-import Footer from './components/Footer.vue'
+import Loading from './Loading.vue'
+import Result from './Result.vue'
+import Upload from './Upload.vue'
 
 
 export default {
     components: {
         Loading,
         Result,
-        Upload,
-        Footer
+        Upload
     },
     data() {
         return {

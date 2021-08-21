@@ -1,39 +1,30 @@
 <template>
-    <div class="flex flex-col h-screen w-full items-center">
-        <Upload v-if="status == 0"/>
-        <Loading v-if="status == 1"/>
-        <Result v-if="status == 2"/>
-        <Footer/>
+    <div class="w-4/5 md:w-1/2 lg:w-1/4 h-100 bg-white shadow-lg m-auto p-5 text-center flex flex-col justify-between items-center rounded-lg">
+        <h1 class="text-lg font-semibold">upload your image</h1>
+        <p class="text-xs py-3">File should be Jpeg, Png,..</p>
+        <div class="w-full  bg-gray-10 border-2 border-blue-400 border-dashed rounded-md" @drop="drop" @dragover="dragOver" @dragleave="dragLeave">
+            <img src="@/images/placeholder.svg" alt="placeholder" class="w-1/2 m-auto opacity-50 mt-2">
+            <p class="opacity-50 text-sm py-3">Drag & Drop your image here</p>
+        </div>
+        <p>Or</p>
+        <label class="bg-blue-600 w-1/2 md:w-2/5 p-2 rounded-sm h-auto cursor-pointer">
+            <span class="text-white">Choose a file</span>
+            <input type="file" class="hidden" ref="file" @change="onChange">
+        </label>
     </div>
 </template>
-
 <script>
-import Loading from './components/Loading.vue'
-import Result from './components/Result.vue'
-import Upload from './components/Upload.vue'
-import Footer from './components/Footer.vue'
-
-
 export default {
-    components: {
-        Loading,
-        Result,
-        Upload,
-        Footer
-    },
     data() {
         return {
             image : null,
         }
     },
-    computed : {
-        status() {
-            return this.$store.state.status
-        }
-    },
     methods: {
         onChange() {
             this.image = this.$refs.file.files[0]
+
+            this.uploadImage()
         },
         drop(event) 
         {
@@ -41,11 +32,11 @@ export default {
             this.$refs.file.files = event.dataTransfer.files
             this.onChange();
 
-            this.uploadImage()
         },
         dragOver(event) {
             event.preventDefault();
-
+            
+            // Change background color of upload box 
             if (!event.currentTarget.classList.contains('bg-gray-200')) {
                 event.currentTarget.classList.remove('bg-gray-100');
                 event.currentTarget.classList.add('bg-gray-300');
@@ -59,11 +50,14 @@ export default {
         uploadImage() {
             let formData = new FormData()
 
-            formData.append('photo', this.image)
+            formData.append('image', this.image)
 
             //Post request to api
             this.$store.dispatch('uploadImage', formData)
+
+            this.$store.commit('setStatus', 1)
         }   
     }
+
 }
 </script>
